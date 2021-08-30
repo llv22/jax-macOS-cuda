@@ -214,6 +214,8 @@ build --define=grpc_no_ares=true
 
 build:cuda --crosstool_top=@local_config_cuda//crosstool:toolchain
 build:cuda --define=using_cuda=true --define=using_cuda_nvcc=true
+# disable nccl
+build:nonccl --define=no_nccl_support=true
 
 build --spawn_strategy=standalone
 build --strategy=Genrule=standalone
@@ -307,6 +309,12 @@ def main():
       help_str="Should we build with MKL-DNN enabled?")
   add_boolean_argument(
       parser,
+      "enable_nccl",
+      default=True,
+      help_str="Should we build with NCCL enabled? Has non effect for non-CUDA "
+                "builds.")
+  add_boolean_argument(
+      parser,
       "enable_cuda",
       help_str="Should we build with CUDA enabled? Requires CUDA and CuDNN.")
   parser.add_argument(
@@ -357,6 +365,7 @@ def main():
     if cudnn_install_path:
       print("CUDNN library path: {}".format(cudnn_install_path))
     print("CUDA compute capabilities: {}".format(args.cuda_compute_capabilities))
+    print("NCCL enabled: {}".format("yes" if args.enable_nccl else "no"))
   write_bazelrc(
       python_bin_path=python_bin_path,
       tf_need_cuda=1 if args.enable_cuda else 0,
@@ -374,6 +383,8 @@ def main():
   if args.enable_cuda:
     config_args += ["--config=cuda"]
     config_args += ["--define=xla_python_enable_gpu=true"]
+    if not args.enable_nccl:
+      config_args += ["--config=nonccl"]
   command = ([bazel_path] + args.bazel_startup_options +
     ["run", "--verbose_failures=true"] + config_args +
     [":install_xla_in_source_tree", os.getcwd()])
