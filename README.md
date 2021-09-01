@@ -12,8 +12,11 @@
 | [**Reference docs**](https://jax.readthedocs.io/en/latest/)
 | [**Code search**](https://cs.opensource.google/jax/jax)
 
-
 **News:** [JAX tops largest-scale MLPerf Training 0.7 benchmarks!](https://cloud.google.com/blog/products/ai-machine-learning/google-breaks-ai-performance-records-in-mlperf-with-worlds-fastest-training-supercomputer)
+
+## Why fork JAX for macOS cuda
+
+As officially JAX doesn't support macOS(at least testing on my macOS 10.13.6, cuda 10.1), trying to fix building issue and enabling CUDA on macOS becomes a task that help me reuse 2x 1080 cards for ML acceleration.
 
 ## What is JAX?
 
@@ -74,13 +77,23 @@ perex_grads = jit(vmap(grad_fun, in_axes=(None, 0, 0)))  # fast per-example grad
 ```
 
 ### Contents
-* [Quickstart: Colab in the Cloud](#quickstart-colab-in-the-cloud)
-* [Transformations](#transformations)
-* [Current gotchas](#current-gotchas)
-* [Installation](#installation)
-* [Neural net libraries](#neural-network-libraries)
-* [Citing JAX](#citing-jax)
-* [Reference documentation](#reference-documentation)
+- [JAX: Autograd and XLA !Continuous integration](#jax-autograd-and-xla-)
+  - [Why fork JAX for macOS cuda](#why-fork-jax-for-macos-cuda)
+  - [What is JAX?](#what-is-jax)
+    - [Contents](#contents)
+  - [Quickstart: Colab in the Cloud](#quickstart-colab-in-the-cloud)
+  - [Transformations](#transformations)
+    - [Automatic differentiation with `grad`](#automatic-differentiation-with-grad)
+    - [Compilation with `jit`](#compilation-with-jit)
+    - [Auto-vectorization with `vmap`](#auto-vectorization-with-vmap)
+    - [SPMD programming with `pmap`](#spmd-programming-with-pmap)
+  - [Current gotchas](#current-gotchas)
+  - [Installation](#installation)
+    - [pip installation](#pip-installation)
+    - [Building JAX from source](#building-jax-from-source)
+  - [Neural network libraries](#neural-network-libraries)
+  - [Citing JAX](#citing-jax)
+  - [Reference documentation](#reference-documentation)
 
 ## Quickstart: Colab in the Cloud
 Jump right in using a notebook in your browser, connected to a Google Cloud GPU.
