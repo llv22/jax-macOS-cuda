@@ -26,12 +26,20 @@ http_archive(
 # b) get the sha256 hash of the commit by running:
 #    curl -L https://github.com/tensorflow/tensorflow/archive/<git hash>.tar.gz | sha256sum
 #    and update the sha256 with the result.
+# http_archive(
+#     name = "org_tensorflow",
+#     sha256 = "579a74ad171d8da7b7193ff863f28482c2e6050c4090650b001fb80bbc46bb0f",
+#     strip_prefix = "tensorflow-04f25b55e27be95ec340f414c2a1cabe16be5c2a",
+#     urls = [
+#         "https://github.com/tensorflow/tensorflow/archive/04f25b55e27be95ec340f414c2a1cabe16be5c2a.tar.gz",
+#     ],
+# )
 http_archive(
     name = "org_tensorflow",
-    sha256 = "579a74ad171d8da7b7193ff863f28482c2e6050c4090650b001fb80bbc46bb0f",
-    strip_prefix = "tensorflow-04f25b55e27be95ec340f414c2a1cabe16be5c2a",
+    sha256 = "5a9a974627c376c034263d0c394cf22f4bfe0dd65db3e0837d0349ea6310cd44",
+    strip_prefix = "tensorflow-2.4.0-macos",
     urls = [
-        "https://github.com/tensorflow/tensorflow/archive/04f25b55e27be95ec340f414c2a1cabe16be5c2a.tar.gz",
+        "https://github.com/TomHeaven/tensorflow/archive/refs/tags/v2.4.0-macos.tar.gz",
     ],
 )
 
