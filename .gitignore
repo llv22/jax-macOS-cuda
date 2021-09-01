@@ -16,3 +16,4 @@ docs/_autosummary
 .vscode
 venv/
 jax.iml
+.jax_configure.bazelrc

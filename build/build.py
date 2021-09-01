@@ -214,7 +214,7 @@ build --define=grpc_no_ares=true
 
 build:cuda --crosstool_top=@local_config_cuda//crosstool:toolchain
 build:cuda --define=using_cuda=true --define=using_cuda_nvcc=true
-# disable nccl
+# Disable for nccl if on mac
 build:nonccl --define=no_nccl_support=true
 
 build --spawn_strategy=standalone
