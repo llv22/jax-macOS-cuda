@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Helper script for building JAX's libjax easily.
+# Helper script for building JAX's jaxlib easily.
 
 
 import argparse
