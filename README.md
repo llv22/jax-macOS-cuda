@@ -17,7 +17,7 @@
 
 ## Why fork JAX for macOS cuda
 
-As officially JAX doesn't support macOS(at least testing on my macOS 10.13.6, cuda 10.1), trying to fix building issue and enabling CUDA on macOS becomes a task that help me reuse 2x 1080 cards for ML acceleration.g
+As officially JAX doesn't support macOS(at least testing on my macOS 10.13.6, cuda 10.1), trying to fix building issue and enabling CUDA on macOS becomes a task that help me reuse 2x 1080 cards for ML acceleration.
 
 ## What is JAX?
 
