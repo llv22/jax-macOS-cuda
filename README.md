@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD033 MD032 MD022 MD040 MD041 -->
 <div align="center">
 <img src="https://raw.githubusercontent.com/google/jax/master/images/jax_logo_250px.png" alt="logo"></img>
 </div>
@@ -16,7 +17,7 @@
 
 ## Why fork JAX for macOS cuda
 
-As officially JAX doesn't support macOS(at least testing on my macOS 10.13.6, cuda 10.1), trying to fix building issue and enabling CUDA on macOS becomes a task that help me reuse 2x 1080 cards for ML acceleration.
+As officially JAX doesn't support macOS(at least testing on my macOS 10.13.6, cuda 10.1), trying to fix building issue and enabling CUDA on macOS becomes a task that help me reuse 2x 1080 cards for ML acceleration.g
 
 ## What is JAX?
 
@@ -77,6 +78,7 @@ perex_grads = jit(vmap(grad_fun, in_axes=(None, 0, 0)))  # fast per-example grad
 ```
 
 ### Contents
+
 - [JAX: Autograd and XLA !Continuous integration](#jax-autograd-and-xla-)
   - [Why fork JAX for macOS cuda](#why-fork-jax-for-macos-cuda)
   - [What is JAX?](#what-is-jax)
@@ -96,6 +98,7 @@ perex_grads = jit(vmap(grad_fun, in_axes=(None, 0, 0)))  # fast per-example grad
   - [Reference documentation](#reference-documentation)
 
 ## Quickstart: Colab in the Cloud
+
 Jump right in using a notebook in your browser, connected to a Google Cloud GPU.
 Here are some starter notebooks:
 - [The basics: NumPy on accelerators, `grad` for differentiation, `jit` for compilation, and `vmap` for vectorization](https://jax.readthedocs.io/en/latest/notebooks/quickstart.html)
