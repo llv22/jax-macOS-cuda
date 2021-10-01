@@ -309,14 +309,18 @@ replicated and executed in parallel across devices.
 Here's an example on an 2-GPU machine:
 
 ```python
-import torch
-device_cnt = torch.cuda.device_count()
+import jax
+n_devices = jax.local_device_count() 
+
+# check device status
+print(jax.devices("gpu"))
+print(jax.devices("cpu"))
 
 from jax import random, pmap
 import jax.numpy as jnp
 
 # Create 8 random 5000 x 6000 matrices, one per GPU
-keys = random.split(random.PRNGKey(0), device_cnt)
+keys = random.split(random.PRNGKey(0), n_devices)
 mats = pmap(lambda key: random.normal(key, (5000, 6000)))(keys)
 
 # Run a local matmul on each device in parallel (no data transfer)
@@ -324,7 +328,7 @@ result = pmap(lambda x: jnp.dot(x, x.T))(mats)  # result.shape is (8, 5000, 5000
 
 # Compute the mean on each device in parallel and print the result
 print(pmap(jnp.mean)(result))
-# prints [1.1566595 1.1805978 ... 1.2321935 1.2015157]
+# prints [1.1608742 1.230151 ]
 ```
 
 In addition to expressing pure maps, you can use fast [collective communication
@@ -332,8 +336,11 @@ operations](https://jax.readthedocs.io/en/latest/jax.lax.html#parallel-operators
 between devices:
 
 ```python
-import torch
-device_cnt = torch.cuda.device_count()
+import jax
+n_devices = jax.local_device_count() 
+
+from jax import random, pmap
+import jax.numpy as jnp
 
 from functools import partial
 from jax import lax
@@ -342,8 +349,8 @@ from jax import lax
 def normalize(x):
   return x / lax.psum(x, 'i')
 
-print(normalize(jnp.arange(float(device_cnt))))
-# prints [0.         0.16666667 0.33333334 0.5       ]
+print(normalize(jnp.arange(float(n_devices))))
+# prints [0. 1.]
 ```
 
 You can even [nest `pmap` functions](https://colab.sandbox.google.com/github/google/jax/blob/master/cloud_tpu_colabs/Pmap_Cookbook.ipynb#scrollTo=MdRscR5MONuN) for more
@@ -352,30 +359,30 @@ sophisticated communication patterns.
 It all composes, so you're free to differentiate through parallel computations:
 
 ```python
+import jax
+n_devices = jax.local_device_count() 
+
+from functools import partial
 from jax import grad
 import jax.numpy as jnp
 from jax import random, pmap
 
 @pmap
 def f(x):
-  y = jnp.sin(x)
-  @pmap
-  def g(z):
-    return jnp.cos(z) * jnp.tan(y.sum()) * jnp.tanh(x).sum()
-  return grad(lambda w: jnp.sum(g(w)))(x)
+    y = jnp.sin(x)
+    @pmap
+    def g(z):
+        return jnp.cos(z) * jnp.tan(y.sum()) * jnp.tanh(x).sum()
+    return grad(lambda w: jnp.sum(g(w)))(x)
 
-x = jnp.ones((5000, 5000))
+x = jnp.ones((n_devices, 1))
 print(f(x))
-# [[ 0.        , -0.7170853 ],
-#  [-3.1085174 , -0.4824318 ],
-#  [10.366636  , 13.135289  ],
-#  [ 0.22163185, -0.52112055]]
+# [[-0.7170831]
+#  [-0.7170831]]
 
 print(grad(lambda x: jnp.sum(f(x)))(x))
-# [[ -3.2369726,  -1.6356447],
-#  [  4.7572474,  11.606951 ],
-#  [-98.524414 ,  42.76499  ],
-#  [ -1.6007166,  -1.2568436]]
+# [[-1.6356444]
+#  [-1.6356444]]
 ```
 
 When reverse-mode differentiating a `pmap` function (e.g. with `grad`), the
@@ -385,6 +392,7 @@ reported issue:
 ```bash
 FilteredStackTrace: ValueError: compiling computation that requires 25000000 logical devices, but only 2 XLA devices are available (num_replicas=25000000, num_partitions=1)
 ```
+The root cause is the mismatch between data dimension with available devices. For more complete jupyter notebook examples, please refer to examples/jax_startup.ipynb
 
 See the [SPMD
 Cookbook](https://colab.sandbox.google.com/github/google/jax/blob/master/cloud_tpu_colabs/Pmap_Cookbook.ipynb)
