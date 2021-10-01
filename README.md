@@ -343,6 +343,7 @@ It all composes, so you're free to differentiate through parallel computations:
 
 ```python
 from jax import grad
+import jax.numpy as jnp
 from jax import random, pmap
 
 @pmap
