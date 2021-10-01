@@ -292,6 +292,9 @@ replicated and executed in parallel across devices.
 
 Currently for compilation purpose, you can build nccl library from [Orlando's nccl-osx source code](https://github.com/llv22/nccl-osx)
 and enter the subfolder build/lib to avoid explicitly adding nccl library into environment variable $LD_LIBRARY_PATH
+```bash
+cd /Users/llv23/Documents/05_machine_learning/dl_gpu_mac/drivers_mac/nccl-osx/build/lib
+```
 
 Here's an example on an 2-GPU machine:
 
@@ -329,7 +332,7 @@ from jax import lax
 def normalize(x):
   return x / lax.psum(x, 'i')
 
-print(normalize(jnp.arange((float)device_cnt)))
+print(normalize(jnp.arange(float(device_cnt))))
 # prints [0.         0.16666667 0.33333334 0.5       ]
 ```
 
@@ -364,6 +367,11 @@ print(grad(lambda x: jnp.sum(f(x)))(x))
 
 When reverse-mode differentiating a `pmap` function (e.g. with `grad`), the
 backward pass of the computation is parallelized just like the forward pass.
+
+reported issue:
+```bash
+FilteredStackTrace: ValueError: compiling computation that requires 25000000 logical devices, but only 2 XLA devices are available (num_replicas=25000000, num_partitions=1)
+```
 
 See the [SPMD
 Cookbook](https://colab.sandbox.google.com/github/google/jax/blob/master/cloud_tpu_colabs/Pmap_Cookbook.ipynb)
