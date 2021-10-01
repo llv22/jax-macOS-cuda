@@ -89,6 +89,8 @@ perex_grads = jit(vmap(grad_fun, in_axes=(None, 0, 0)))  # fast per-example grad
     - [Compilation with `jit`](#compilation-with-jit)
     - [Auto-vectorization with `vmap`](#auto-vectorization-with-vmap)
     - [SPMD programming with `pmap`](#spmd-programming-with-pmap)
+      - [Preparation of loading NCCL](#preparation-of-loading-nccl)
+      - [SPMD examples](#spmd-examples)
   - [Current gotchas](#current-gotchas)
   - [Installation](#installation)
     - [pip installation](#pip-installation)
@@ -283,18 +285,26 @@ differentiation for fast Jacobian and Hessian matrix calculations in
 
 ### SPMD programming with `pmap`
 
+#### Preparation of loading NCCL
+ 
+For the purpose of loading latest NCCL local libraries, there are two options:
+
+1. you can build nccl library from [Orlando's nccl-osx source code](https://github.com/llv22/nccl-osx)
+and enter the subfolder build/lib to avoid explicitly adding nccl library into environment variable $LD_LIBRARY_PATH
+```bash
+cd /Users/llv23/Documents/05_machine_learning/dl_gpu_mac/drivers_mac/nccl-osx/build/lib
+```
+
+2. alternatively, refer to exmaples/jax_startup.jpynb for how to change $LD_LIBRARY_PATH
+
+#### SPMD examples
+
 For parallel programming of multiple accelerators, like multiple GPUs, use
 [`pmap`](https://jax.readthedocs.io/en/latest/jax.html#parallelization-pmap).
 With `pmap` you write single-program multiple-data (SPMD) programs, including
 fast parallel collective communication operations. Applying `pmap` will mean
 that the function you write is compiled by XLA (similarly to `jit`), then
 replicated and executed in parallel across devices.
-
-Currently for compilation purpose, you can build nccl library from [Orlando's nccl-osx source code](https://github.com/llv22/nccl-osx)
-and enter the subfolder build/lib to avoid explicitly adding nccl library into environment variable $LD_LIBRARY_PATH
-```bash
-cd /Users/llv23/Documents/05_machine_learning/dl_gpu_mac/drivers_mac/nccl-osx/build/lib
-```
 
 Here's an example on an 2-GPU machine:
 
