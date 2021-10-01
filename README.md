@@ -290,6 +290,9 @@ fast parallel collective communication operations. Applying `pmap` will mean
 that the function you write is compiled by XLA (similarly to `jit`), then
 replicated and executed in parallel across devices.
 
+Currently for compilation purpose, you can build nccl library from [Orlando's nccl-osx source code](https://github.com/llv22/nccl-osx)
+and enter the subfolder build/lib to avoid explicitly adding nccl library into environment variable $LD_LIBRARY_PATH
+
 Here's an example on an 2-GPU machine:
 
 ```python
