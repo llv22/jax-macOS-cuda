@@ -290,14 +290,17 @@ fast parallel collective communication operations. Applying `pmap` will mean
 that the function you write is compiled by XLA (similarly to `jit`), then
 replicated and executed in parallel across devices.
 
-Here's an example on an 8-GPU machine:
+Here's an example on an 2-GPU machine:
 
 ```python
+import torch
+device_cnt = torch.cuda.device_count()
+
 from jax import random, pmap
 import jax.numpy as jnp
 
 # Create 8 random 5000 x 6000 matrices, one per GPU
-keys = random.split(random.PRNGKey(0), 2)
+keys = random.split(random.PRNGKey(0), device_cnt)
 mats = pmap(lambda key: random.normal(key, (5000, 6000)))(keys)
 
 # Run a local matmul on each device in parallel (no data transfer)
@@ -313,6 +316,9 @@ operations](https://jax.readthedocs.io/en/latest/jax.lax.html#parallel-operators
 between devices:
 
 ```python
+import torch
+device_cnt = torch.cuda.device_count()
+
 from functools import partial
 from jax import lax
 
@@ -320,7 +326,7 @@ from jax import lax
 def normalize(x):
   return x / lax.psum(x, 'i')
 
-print(normalize(jnp.arange(2.)))
+print(normalize(jnp.arange((float)device_cnt)))
 # prints [0.         0.16666667 0.33333334 0.5       ]
 ```
 
