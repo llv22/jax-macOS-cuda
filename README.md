@@ -353,6 +353,7 @@ def f(x):
     return jnp.cos(z) * jnp.tan(y.sum()) * jnp.tanh(x).sum()
   return grad(lambda w: jnp.sum(g(w)))(x)
 
+x = jnp.ones((5000, 5000))
 print(f(x))
 # [[ 0.        , -0.7170853 ],
 #  [-3.1085174 , -0.4824318 ],
