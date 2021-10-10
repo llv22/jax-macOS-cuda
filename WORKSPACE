@@ -5,6 +5,8 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 # b) get the sha256 hash of the commit by running:
 #    curl -L https://github.com/tensorflow/tensorflow/archive/<git hash>.tar.gz | sha256sum
 #    and update the sha256 with the result.
+
+## Orlando's already fixed the issue of remote branch, please check into JAX0.2.21_FIXED.md 
 http_archive(
     name = "org_tensorflow",
     sha256 = "6b14b66a74728736359afcb491820fa3e713ea4a74bff0defe920f3453a3a0f0",
@@ -14,6 +16,9 @@ http_archive(
     ],
 )
 
+## Currently, just use local setup for 0.2.21 compatible version, just guarantee : 
+# TF: https://github.com/tensorflow/tensorflow/archive/b5b1ff47ad250c3e38dcadef5f6bc414b0a533ee.tar.gz and sha256: 6b14b66a74728736359afcb491820fa3e713ea4a74bff0defe920f3453a3a0f0
+# local setup is located in /private/var/tmp/_bazel_llv23/514259ef8f75fe7e040e6e3c97f3d5ad/external/, about 4.61G
 # For development, one can use a local TF repository instead.
 # local_repository(
 #    name = "org_tensorflow",
